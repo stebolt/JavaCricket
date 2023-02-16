@@ -8,7 +8,6 @@ public class Match {
     final private int overLimits;
     Team battingTeam;
     Team fieldingTeam;
-
     Player playerAtBat;
     Player playerAtBowlersEnd;
 
@@ -84,7 +83,7 @@ public class Match {
             currentOver++;
         }
         this.inProgress = false;
-        battingTeam.printScorecard();
+        battingTeam.printScorecard(true);  // true prints the extended scorecard
     }
 
     void playAnOver(int currentOver) {
@@ -137,6 +136,8 @@ public class Match {
     public void decideTheWinner() {
         // TODO - can I make this comparison cleaner ?
         System.out.println();
+        fieldingTeam.printScorecard();
+        battingTeam.printScorecard();
         if (battingTeam.getTeamScore() == fieldingTeam.getTeamScore()) {
             System.out.println("The match is tied!");
         } else if (battingTeam.getTeamScore() > fieldingTeam.getTeamScore()) {
