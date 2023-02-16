@@ -4,10 +4,10 @@ import java.util.Random;
 
 public class Match {
     public boolean inProgress = true;
+    public boolean secondInnings = false;
     final private int overLimits;
     Team battingTeam;
     Team fieldingTeam;
-
     Player playerAtBat;
     Player playerAtBowlersEnd;
 
@@ -68,6 +68,7 @@ public class Match {
     void playTheMatch() {
         playAnInnings();
         switchTeams();
+        this.secondInnings = true;
         this.inProgress = true;
         playAnInnings();
         decideTheWinner();
@@ -82,7 +83,7 @@ public class Match {
             currentOver++;
         }
         this.inProgress = false;
-        battingTeam.printScorecard();
+        battingTeam.printScorecard(true);  // true prints the extended scorecard
     }
 
     void playAnOver(int currentOver) {
@@ -96,7 +97,12 @@ public class Match {
     void playADelivery(int currentOver, int currentDelivery) {
         System.out.print("Over: " + currentOver + " | Delivery: " + currentDelivery + ")\t\t");
         playAShot(scoringEngine.getShotOutcome());
-        // TODO - stop the game if the chase is successful
+        wasTheChaseSuccessfulYet();
+    }
+
+    void wasTheChaseSuccessfulYet(){
+        if(secondInnings & this.battingTeam.getTeamScore() > this.fieldingTeam.getTeamScore())
+            this.inProgress = false;
     }
 
     public void rotateTheStrike() {
@@ -129,6 +135,9 @@ public class Match {
 
     public void decideTheWinner() {
         // TODO - can I make this comparison cleaner ?
+        System.out.println();
+        fieldingTeam.printScorecard();
+        battingTeam.printScorecard();
         if (battingTeam.getTeamScore() == fieldingTeam.getTeamScore()) {
             System.out.println("The match is tied!");
         } else if (battingTeam.getTeamScore() > fieldingTeam.getTeamScore()) {

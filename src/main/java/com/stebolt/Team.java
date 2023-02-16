@@ -27,10 +27,9 @@ public class Team {
         return score;
     }
 
-    public void printScorecard(){
+    public void printScorecard(boolean extended){
         // TODO - Nicer formatted scorecard
-        System.out.print("-----" + this.name + "\t");
-        System.out.println(getTeamScore() + "/" + getWickets() + "------");
+        printScorecard();
         for (Player player : this.squad) {
             System.out.println(player.fname.charAt(0) + ". "
                                 + player.sname
@@ -44,5 +43,10 @@ public class Team {
                                 + (int) player.calculateAverage()
                                 ) ;
         }
+    }
+
+    public void printScorecard() {
+        System.out.print("-----" + this.name + "\t");
+        System.out.println(getTeamScore() + "/" + getWickets() + "------");
     }
 }
