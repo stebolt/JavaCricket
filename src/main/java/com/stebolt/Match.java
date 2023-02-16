@@ -1,5 +1,8 @@
 package com.stebolt;
 
+import ch.qos.logback.classic.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Random;
 
 public class Match {
@@ -12,13 +15,16 @@ public class Match {
     Player playerAtBat;
     Player playerAtBowlersEnd;
 
+    Logger logger;
 
     ScoringEngine scoringEngine = new ScoringEngine();
 
-    public Match(int overLimits, Team home, Team away) {
+    public Match(int overLimits, Team home, Team away, Logger logger) {
         this.overLimits = overLimits;
+        this.logger = logger;
         tossTheCoin(home, away);
-        System.out.println(battingTeam.name + " to bat first.\nGame on!");
+//        System.out.println(battingTeam.name + " to bat first.\nGame on!");
+        logger.info(battingTeam.name + " to bat first. Game on!");
     }
 
     public void tossTheCoin(Team home, Team away) {
@@ -33,34 +39,34 @@ public class Match {
         }
     }
 
-    void playAShot(int deliveryScore) {
+    void playAShot(int currentOver, int currentDelivery, int deliveryScore) {
         if (deliveryScore != 99)
             playerAtBat.addToScore(deliveryScore);
         switch (deliveryScore) {
             case 0:
-                System.out.println(deliveryScore + ": No score for " + playerAtBat);
+                logger.info("{}.{}) {}: No score for {}", currentOver, currentDelivery, deliveryScore, playerAtBat);
                 break;
             case 1:
-                System.out.println(deliveryScore + ": a single of the ball for " + playerAtBat);
+                logger.info("{}.{}) {}: a single of the ball for {}", currentOver, currentDelivery, deliveryScore, playerAtBat);
                 rotateTheStrike();
                 break;
             case 2:
-                System.out.println(deliveryScore + ": " + playerAtBat + " makes a double");
+                logger.info("{}.{}) {}: {} makes a double", currentOver, currentDelivery, deliveryScore, playerAtBat);
                 break;
             case 3:
-                System.out.println(deliveryScore + ": the fielders stop the boundary, but that's 3 for " + playerAtBat);
+                logger.info("{}.{}) : the fielders stop the boundary, but that's {} for {}", currentOver, currentDelivery, deliveryScore, playerAtBat);
                 rotateTheStrike();
                 break;
             case 4:
-                System.out.println(deliveryScore + ": carries to the rope for a boundary! Four runs for " + playerAtBat);
+                logger.info("{}.{}) It carries to the rope for a boundary! {} for {}", currentOver, currentDelivery, deliveryScore, playerAtBat);
                 break;
             case 6:
-                System.out.println(deliveryScore + ": and that's a massive shot from " + playerAtBat);
+                logger.info("{}.{}) : and that's a massive {} from {}", currentOver, currentDelivery, deliveryScore, playerAtBat);
                 break;
             default:
                 // TODO - a better dismissal engine
                 playerAtBat.setDismissal("Bowled!");
-                System.out.println("Howzat?! " + playerAtBat + " is out for " + playerAtBat.score + "!");
+                logger.info("{}.{}) : Howzat! {} is out for {}", currentOver, currentDelivery, playerAtBat, playerAtBat.score);
                 bringInTheNextBatter();
                 break;
         }
@@ -96,8 +102,7 @@ public class Match {
     }
 
     void playADelivery(int currentOver, int currentDelivery) {
-        System.out.print("Over: " + currentOver + " | Delivery: " + currentDelivery + ")\t\t");
-        playAShot(scoringEngine.getShotOutcome());
+        playAShot(currentOver, currentDelivery, scoringEngine.getShotOutcome());
         wasTheChaseSuccessfulYet();
     }
 
@@ -110,15 +115,15 @@ public class Match {
         Player x = playerAtBat;
         playerAtBat = playerAtBowlersEnd;
         playerAtBowlersEnd = x;
-        System.out.println("Rotate the strike");
+        logger.debug("Rotate the strike");
     }
 
     public void bringInTheNextBatter() {
         if (battingTeam.getWickets() < battingTeam.squad.length - 1) {
             playerAtBat = battingTeam.squad[battingTeam.getWickets() + 1];
-            System.out.println(playerAtBat + " comes in to bat");
+            logger.info("{} comes in to bat", playerAtBat);
         } else {
-            System.out.println("All out!");
+            logger.info("{} are all out for {}", battingTeam.name, battingTeam.getTeamScore());
             this.inProgress = false;
         }
     }
@@ -136,15 +141,14 @@ public class Match {
 
     public void decideTheWinner() {
         // TODO - can I make this comparison cleaner ?
-        System.out.println();
         if (battingTeam.getTeamScore() == fieldingTeam.getTeamScore()) {
-            System.out.println("The match is tied!");
+            logger.info("The match is tied!");
         } else if (battingTeam.getTeamScore() > fieldingTeam.getTeamScore()) {
-            System.out.println("The winners are " + battingTeam.name + " by "
-                    + (battingTeam.squad.length -1 - battingTeam.getWickets()) + " wickets");
+            logger.info("The winners are {} by {} wickets"
+                    , battingTeam.name, (battingTeam.squad.length -1 - battingTeam.getWickets()));
         } else
-            System.out.println("The winners are " + fieldingTeam.name + " by "
-                    + (fieldingTeam.getTeamScore() - battingTeam.getTeamScore()) + " runs");
+            logger.info("The winners are {} by {} runs"
+                    ,  fieldingTeam.name, (fieldingTeam.getTeamScore() - battingTeam.getTeamScore()) );
     }
 }
 

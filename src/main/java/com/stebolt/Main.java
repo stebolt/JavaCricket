@@ -1,9 +1,14 @@
 package com.stebolt;
 
+import ch.qos.logback.classic.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Main {
+
+    private static final Logger logger = (Logger) LoggerFactory.getLogger("JC!");
     public static void main(String[] args) {
-        System.out.println("Welcome to Java Cricket!");
-        Match match = new Match(20, squadBuilder("eng"), squadBuilder("aus"));
+        logger.info("Starting the game from {}", Main.class.getSimpleName());
+        Match match = new Match(20, squadBuilder("eng"), squadBuilder("aus"), logger);
         match.playTheMatch();
     }
 

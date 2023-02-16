@@ -28,7 +28,7 @@ public class Team {
     }
 
     public void printScorecard(){
-        // TODO - Nicer formatted scorecard
+        // TODO - Nicer formatted scorecard --> Return it as a String Builder to the Logger! Multiline logging :)
         System.out.print("-----" + this.name + "\t");
         System.out.println(getTeamScore() + "/" + getWickets() + "------");
         for (Player player : this.squad) {
