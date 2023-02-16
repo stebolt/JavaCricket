@@ -27,22 +27,24 @@ public class Team {
         return score;
     }
 
-    public void printScorecard(){
-        // TODO - Nicer formatted scorecard --> Return it as a String Builder to the Logger! Multiline logging :)
-        System.out.print("-----" + this.name + "\t");
-        System.out.println(getTeamScore() + "/" + getWickets() + "------");
+    public String printScorecard(){
+        StringBuilder sb = new StringBuilder(2000);
+        sb.append("-----" + this.name + "\t");
+        sb.append(getTeamScore() + "/" + getWickets() + "------\n");
         for (Player player : this.squad) {
-            System.out.println(player.fname.charAt(0) + ". "
-                                + player.sname
-                                + ": \t\t"
-                                + player.score
-                                + "\t dismissed: "
-                                + player.dismissed
-                                + "\t balls faced: "
-                                + player.ballsFaced
-                                + "\t batting average: "
-                                + (int) player.calculateAverage()
-                                ) ;
+            sb.append(player.fname.charAt(0) + ". "
+                    + player.sname
+                    + ": \t\t"
+                    + player.score
+                    + "\t dismissed: "
+                    + player.dismissed
+                    + "\t balls faced: "
+                    + player.ballsFaced
+                    + "\t batting average: "
+                    + (int) player.calculateAverage()
+                    +"\n"
+            );
         }
+        return sb.toString();
     }
 }

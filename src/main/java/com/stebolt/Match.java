@@ -90,7 +90,7 @@ public class Match {
             currentOver++;
         }
         this.inProgress = false;
-        battingTeam.printScorecard();
+        logger.info(battingTeam.printScorecard());
     }
 
     void playAnOver(int currentOver) {
