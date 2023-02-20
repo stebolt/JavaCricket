@@ -1,8 +1,6 @@
 package com.stebolt;
 
 import ch.qos.logback.classic.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Random;
 
 public class Match {
