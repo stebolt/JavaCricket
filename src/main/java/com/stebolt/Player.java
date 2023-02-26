@@ -29,9 +29,12 @@ public class Player {
     }
 
     public void addToScore(int score){
-        this.ballsFaced++;
         this.score += score;
 //        calculateAverage();
+    }
+
+    public void addToBallsFaced(){
+        this.ballsFaced += 1;
     }
 
     public double calculateAverage() {

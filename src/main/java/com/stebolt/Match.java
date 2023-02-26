@@ -38,6 +38,7 @@ public class Match {
     }
 
     void playAShot(int currentOver, int currentDelivery, int deliveryScore) {
+        playerAtBat.addToBallsFaced();
         if (deliveryScore != 99)
             playerAtBat.addToScore(deliveryScore);
         switch (deliveryScore) {
